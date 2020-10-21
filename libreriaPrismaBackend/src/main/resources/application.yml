@@ -1,9 +1,6 @@
 # Spring configurations
 spring:
-   main:
-      allow-bean-definition-overriding: false
-   security:
-      require-ssl: false
+   
    # Database
    datasource:
       url: jdbc:postgresql://localhost:5432/libreria-prisma?useSSL=false
@@ -22,6 +19,6 @@ angular:
    cross-origin: http://localhost:4200
       
 #Token configuration
-#jwt:
-#   secret: secret
-#   expiration: 36000
+jwt:
+   secret: secret
+   expiration: 36000

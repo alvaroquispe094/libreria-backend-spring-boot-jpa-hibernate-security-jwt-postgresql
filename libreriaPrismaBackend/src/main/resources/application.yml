@@ -1,22 +1,33 @@
 # Spring configurations
 spring:
-   
+   main:
+      allow-bean-definition-overriding: false
+   security:
+      require-ssl: false
    # Database
    datasource:
-      url: jdbc:postgresql://localhost:5432/libreria-prisma?useSSL=false
-      username: postgres
-      password: postgres
+      url: ${JDBC_DATABASE_URL}
+      username: ${JDBC_DATABASE_USERNAME}
+      password: ${JDBC_DATABASE_PASSWORD}
       
    # JPA properties
    jpa:
       hibernate:
          ddl-auto: update
       show-sql: false
+      database: postgresql
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
       generate-ddl: true
+      
+# Server configuration
+server:
+   port: ${PORT}    
+   ssl:
+      enabled: false 
       
 #angular configuration
 angular:
-   cross-origin: http://localhost:4200
+   cross-origin: https://libreria-prisma.herokuapp.com    
       
 #Token configuration
 jwt:

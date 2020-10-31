@@ -30,6 +30,6 @@ angular:
    cross-origin: https://libreria-prisma.herokuapp.com    
       
 #Token configuration
-#jwt:
-#   secret: secret
-#   expiration: 36000
+jwt:
+   secret: secret
+   expiration: 36000

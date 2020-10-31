@@ -2,7 +2,7 @@ package com.groupal.libreriaPrismaBackend.dto;
 
 import com.groupal.libreriaPrismaBackend.entity.Rol;
 
-public class UsuarioDto {
+public class UsuarioDto extends GenericDto {
 	
 	    private Integer id;
 	    private String nombre;

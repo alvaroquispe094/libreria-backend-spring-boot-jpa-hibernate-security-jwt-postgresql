@@ -3,11 +3,13 @@ package com.groupal.libreriaPrismaBackend.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.groupal.libreriaPrismaBackend.dto.UsuarioDto;
+import com.groupal.libreriaPrismaBackend.entity.Book;
 import com.groupal.libreriaPrismaBackend.entity.QUsuarioRol;
 import com.groupal.libreriaPrismaBackend.entity.Rol;
 import com.groupal.libreriaPrismaBackend.entity.Usuario;
@@ -15,6 +17,7 @@ import com.groupal.libreriaPrismaBackend.entity.UsuarioRol;
 import com.groupal.libreriaPrismaBackend.exception.ResourceNotFoundException;
 import com.groupal.libreriaPrismaBackend.repository.UsuarioRepository;
 import com.groupal.libreriaPrismaBackend.repository.UsuarioRolRepository;
+import com.groupal.libreriaPrismaBackend.utils.ObjectMapperUtils;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 @Service
@@ -49,36 +52,73 @@ public class UsuarioService implements IUsuarioService {
 
 
     @Override
-	public Usuario createUsuario(UsuarioDto usuarioDto) {
+	public UsuarioDto createUsuario(UsuarioDto usuarioDto) {
+    	
+    	try {
+    		Usuario usuario = ObjectMapperUtils.map(usuarioDto, Usuario.class);
+    		
+    		//debo encriptar la password
+    		usuario.setPassword(encoder.encode(usuarioDto.getPassword()));
+    		
+    		//guardo el unuevo ususario
+			Usuario usuarioResponse = this.usuarioRepository.save(usuario);
+			
+			if (usuarioResponse != null) {
+	    		//obtengo el rol del usuario
+	    		Rol rol = rolService.getById(usuarioDto.getRol().getId());
+	    		
+	    		//guardo el rol para el usuario
+	    		UsuarioRol usuarioRol = new UsuarioRol();
+	    		usuarioRol.setUsuario(usuarioResponse);
+	    		usuarioRol.setRol(rol);
+	    		usuarioRol.setActivo(true);
+	    		usuarioRolRepository.save(usuarioRol);
+	    		
+//	    		return usuarioResponse;
+	    		
+	    	}else {
+	    		throw new ResourceNotFoundException("Record not saved");
+	    	}
+			
+			usuarioDto.setMensaje("El usuario ha sido creado de manera exitosa");
+		    return usuarioDto;
+	    
+		} catch (ResourceNotFoundException e) {
+			throw e;
+		} catch (Exception e) {
+//		LOG.error("Error al grabar la información.", e);
+			throw new ServiceException("Error al grabar la información.");
+		}
+    	
     	
     	//seteando usuario
-    	Usuario usuario = new Usuario();
-    	usuario.setNombre(usuarioDto.getNombre());
-    	usuario.setApellido(usuarioDto.getApellido());
-    	usuario.setEmail(usuarioDto.getEmail());
-    	usuario.setUsuario(usuarioDto.getUsuario());
-    	usuario.setPassword(encoder.encode(usuarioDto.getPassword()));
-    	usuario.setDireccion(usuarioDto.getDireccion());
-    	usuario.setFechaNacimiento(usuarioDto.getFechaNacimiento());
-    	usuario.setDocumento(usuarioDto.getDocumento());
-    	usuario.setActivo(true);
-    	Usuario usuarioResponse = usuarioRepository.save(usuario); // se guarda el usuario y se obtiene el result para obtener el id
-    	
-    	if (usuarioResponse != null) {
-    		//obtengo el rol del usuario
-    		Rol rol = rolService.getById(usuarioDto.getRol().getId());
-    		
-    		//guardo el rol para el usuario
-    		UsuarioRol usuarioRol = new UsuarioRol();
-    		usuarioRol.setUsuario(usuarioResponse);
-    		usuarioRol.setRol(rol);
-    		usuarioRolRepository.save(usuarioRol);
-    		
-    		return usuarioResponse;
-    		
-    	}else {
-    		throw new ResourceNotFoundException("Record not saved");
-    	}
+//    	Usuario usuario = new Usuario();
+//    	usuario.setNombre(usuarioDto.getNombre());
+//    	usuario.setApellido(usuarioDto.getApellido());
+//    	usuario.setEmail(usuarioDto.getEmail());
+//    	usuario.setUsuario(usuarioDto.getUsuario());
+//    	usuario.setPassword(encoder.encode(usuarioDto.getPassword()));
+//    	usuario.setDireccion(usuarioDto.getDireccion());
+//    	usuario.setFechaNacimiento(usuarioDto.getFechaNacimiento());
+//    	usuario.setDocumento(usuarioDto.getDocumento());
+//    	usuario.setActivo(true);
+//    	Usuario usuarioResponse = usuarioRepository.save(usuario); // se guarda el usuario y se obtiene el result para obtener el id
+//    	
+//    	if (usuarioResponse != null) {
+//    		//obtengo el rol del usuario
+//    		Rol rol = rolService.getById(usuarioDto.getRol().getId());
+//    		
+//    		//guardo el rol para el usuario
+//    		UsuarioRol usuarioRol = new UsuarioRol();
+//    		usuarioRol.setUsuario(usuarioResponse);
+//    		usuarioRol.setRol(rol);
+//    		usuarioRolRepository.save(usuarioRol);
+//    		
+//    		return usuarioResponse;
+//    		
+//    	}else {
+//    		throw new ResourceNotFoundException("Record not saved");
+//    	}
 	}
 
 	@Override

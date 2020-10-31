@@ -107,7 +107,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
         		.authorizeRequests()
                 .antMatchers("/api/auth/registrar", "/static/**", "/index.html", "/**.css", "/**.js", "/**.ico", "/assets/images/**", "/**.woff", "/**.ttf").permitAll()
-                .antMatchers("/api/auth/**", "/api/admin/books", "/api/admin/book/{id}").permitAll()
+                .antMatchers("/api/auth/**", "/api/admin/books", "/api/admin/usuario/add", "/api/admin/book/{id}").permitAll()
                 .antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_RECEPTIONIST')") 
                 .anyRequest().permitAll()
                 .and()

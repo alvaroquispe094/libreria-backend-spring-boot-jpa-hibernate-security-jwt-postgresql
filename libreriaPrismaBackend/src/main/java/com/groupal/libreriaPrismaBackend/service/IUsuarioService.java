@@ -7,7 +7,7 @@ import com.groupal.libreriaPrismaBackend.entity.Usuario;
 
 public interface IUsuarioService {
 	
-	public Usuario createUsuario(UsuarioDto usuario);
+	public UsuarioDto createUsuario(UsuarioDto usuario);
 
     public UsuarioDto updateUsuario(UsuarioDto usuario);
     

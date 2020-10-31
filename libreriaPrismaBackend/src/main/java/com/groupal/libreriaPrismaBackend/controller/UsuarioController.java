@@ -43,8 +43,9 @@ public class UsuarioController {
     }
 
     @PostMapping("/usuario/add")
-    public ResponseEntity < Usuario > createUsuario(@RequestBody UsuarioDto usuarioDto) {
-        return ResponseEntity.ok().body(this.usuarioService.createUsuario(usuarioDto));
+    public ResponseEntity < UsuarioDto > createUsuario(@RequestBody UsuarioDto usuarioDto) {
+//        return ResponseEntity.ok().body(this.usuarioService.createUsuario(usuarioDto));
+        return new ResponseEntity<>(this.usuarioService.createUsuario(usuarioDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/usuario/update/{id}")

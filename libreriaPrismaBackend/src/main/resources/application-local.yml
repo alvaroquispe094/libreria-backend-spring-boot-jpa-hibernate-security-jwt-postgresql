@@ -22,6 +22,6 @@ angular:
    cross-origin: http://localhost:4200
       
 #Token configuration
-#jwt:
-#   secret: secret
-#   expiration: 36000
+jwt:
+   secret: secret
+   expiration: 36000
